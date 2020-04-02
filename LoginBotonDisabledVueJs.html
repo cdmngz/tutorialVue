@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase3</title>
+</head>
+<body>
+
+    <div id="app" v-cloak>
+        <h1>Bienvenido {{ user.name | capitalized }}</h1>
+
+        <div class="login-errors-container" v-if="errors.length !== 0">
+            <ol class="login-errors">
+                <li v-for='error in errors'>{{ error }}</li>
+            </ol>
+        </div>
+        
+        <form class="login" v-on:submit.prevent="onLogin">
+            <div class="login-field">
+                <label for="username">Usuario: </label>
+            <input id="username" type="text" v-model="user.name" autofocus/>
+            </div>
+            
+            <div class="login-field">
+                <label for="password">Contraseña: </label>
+                <input id="password" type="password" v-model="user.password"/>
+            </div>
+            
+            <div>
+                <button type="submit" v-bind:disabled="isFormEmpty">Entrar</button>
+            </div>
+        </form>
+        
+        <a v-bind:href="urlPasswordChange" target="_blank"> ¿Has olvidado tu Contraseña? </a>
+    </div>
+    
+    <script src="vue.js"></script>
+    <script>
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                user: { name: null, password: null, direction: 'pepe' },
+                urlPasswordChange: 'http://localhost:8080',
+                errors: []
+            },
+            computed : {
+                isFormEmpty: function() {
+                    return !(this.user.name && this.user.password)
+                }
+            },
+            methods: {
+                onLogin: function() {
+                    this.errors = []
+
+                    if(this.user.name.length < 6) {
+                        this.errors.push('El nombre de usuario tiene que ser mayor de 6 caracteres')
+                    }
+
+                    if(this.user.password.length < 6) {
+                        this.errors.push('La contraseña tiene que ser mayor a 6 caracteres')
+                    }
+                }
+            },
+            filters: {
+                uppercase: function(data) {
+                    return data && data.toUpperCase()
+                },
+                lowercase: function(data) {
+                    return data && data.toLowerCase()
+                },
+                capitalized: function(data) {
+                    return data && data.charAt(0).toUpperCase() + data.slice(1)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
