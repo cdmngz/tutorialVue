@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BonusTrack01 - VueJs</title>
+</head>
+<body>
+    
+    <div id="app"></div>
+
+    <script src="vue.js"></script>
+    <script>
+
+        const app = new Vue({
+            el: '#app',
+            template: `<div v-bind:style="styles" v-on:click="log()">{{ this.titulo }}</div>`,
+            data: {
+                titulo: 'Rectángulo',
+                width: 100,
+                height: 100
+            },
+            computed: {
+                area: function() {
+                    return this.width*this.height
+                },
+                styles: function() {
+                    return {
+                        width: this.width+'px',
+                        height: this.height+'px',
+                        background: 'blue'
+                    }
+                }
+            },
+            methods: {
+                log: function() {
+                    console.log(`Soy un rectangulo de área: ${this.area} pixeles`)
+                }
+            },
+            created : function(){ console.log('se crea la instancia: todavía no se ha reemplazado "#app" por el template de esta instancia'); },
+            mounted : function(){ console.log('ya se ha renderizado el template en el DOM'); }
+        })
+    </script>
+</body>
+</html>
