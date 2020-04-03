@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstilosVue</title>
+    <style>
+        .box {
+            display: inline-block;
+            margin: 1rem;
+            padding: 1rem;
+        }
+        .box.winner {
+            background: rgb(158, 255, 93);
+        }
+        .box.box.winner .pokemon > * {
+            opacity: 0.5;
+        }
+
+        .pokemon {
+            display: inline-block;
+            margin: 1rem;
+            width: 1rem;
+        }
+        .pokemon-head, .pokemon-body {
+            height: 3rem;
+        }
+        .pokemon-feet {
+            height: 1rem;
+        }
+
+        .pokemon.bulvasaur .pokemon-head {
+            background:	#ff6a62;
+        }
+        .pokemon.bulvasaur .pokemon-body {
+            background: #62d5b4;
+        }
+        .pokemon.bulvasaur .pokemon-feet {
+            background: #317373; 
+        }
+        
+        .pokemon.squirtle .pokemon-head, .pokemon.squirtle .pokemon-feet { 
+            background: #8bc5cd;
+        } 
+        .pokemon.squirtle .pokemon-body {
+            background: #ffe69c;
+        }
+        
+        .pokemon.charmander .pokemon-head, .pokemon.charmander .pokemon-feet {
+            background: #de5239;
+        }
+        .pokemon.charmander .pokemon-body {
+            background: red;
+        }
+
+        .pokemon.pikachu { background: #f6e652;	}
+        .pokemon.pikachu .pokemon-feet {
+            background: #980;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="app">
+        <div class="actions-container">
+            <button @click="fight">Luchar</button>
+        </div>
+
+        <div :class="['box', { winner: player1.winner }]">
+            <select v-model="player1.pokemon" v-on:change="resetWinner">
+                <option v-for="pokemon in pokemons" v-bind:value="pokemon">{{ pokemon.name }}</option>
+            </select>
+            <pokemon v-bind:class="player1.pokemon.name"></pokemon>
+        </div>
+
+        <label>VS</label>
+
+        <div :class="['box', { winner: player2.winner }]">
+            <pokemon v-bind:class="player2.pokemon.name"></pokemon>
+            <select v-model="player2.pokemon" v-on:change="resetWinner">
+                <option v-for="pokemon in pokemons" v-bind:value="pokemon">{{ pokemon.name }}</option>
+            </select>
+        </div>
+    </div>
+
+    <script src="vue.js"></script>
+    <script>
+
+        Vue.component('pokemon', {  
+            template: [
+                `<div class="pokemon">
+                    <div class="pokemon-head"></div>
+                    <div class="pokemon-body"></div>
+                    <div class="pokemon-feet"></div>
+                </div>`
+            ].join('')
+        })
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                player1: { pokemon: {}, winner: false },
+                player2: { pokemon: {}, winner: false },
+                pokemons: [
+                    { id: 0, name: 'pikachu', type: 'electricidad'},
+                    { id: 1, name: 'charmander', type: 'fuego'},
+                    { id: 2, name: 'squirtle', type: 'agua'},
+                    { id: 3, name: 'bulvasaur', type: 'planta'}
+                ],
+                results: [
+                    [0, 2, 1, 0],
+                    [1, 0, 2, 2],
+                    [2, 1, 0, 1],
+                    [0, 1, 2, 0]
+                ]
+            },
+            methods: {
+                fight: function() {
+                    const result = this.results[this.player1.pokemon.id][this.player2.pokemon.id]
+                    const selectWinner = [
+                        () => {
+                            this.player1.winner = true
+                            this.player2.winner = true
+                        },
+                        () => {
+                            this.player1.winner = true
+                            this.player2.winner = false
+                        },
+                        () => {
+                            this.player1.winner = false
+                            this.player2.winner = true
+                        }
+                    ]
+                    selectWinner[result]()
+                    console.log(selectWinner[result]())
+                },
+                resetWinner: function() {
+                    this.player1.winner = false
+                    this.player2.winner = false
+                }
+            }
+        })
+    </script>
+</body>
+</html>
