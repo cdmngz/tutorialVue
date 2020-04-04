@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VueJs</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <div id="app">
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 m-4">
+
+                <template v-if="nombre">    
+                    <h1 id="title">{{ genero == 'f' ? 'Bienvenida' : 'Bienvenido' }} {{ nombre }}</h1>
+                    <p>Hola {{ nombre }}, {{ genero == 'f' ? 'la' : 'lo' }} estábamos esperando...</p>
+                    <p>Tu nombre al revés es: <b>{{ nombre.toLowerCase().split('').reverse().join('') }}</b></p>
+                </template>
+                <p v-else>Por favor, ingrese un nombre:</p> 
+
+                <form v-on:submit.prevent="signUp()">
+
+                    <input type="text" v-model="nombre" class="form-control" autofocus="autofocus">
+                    <p v-if="nombre.length > 40 && nombre.length > 0" class="alert alert-danger">
+                        El nombre debe ser mayor a 4 caracteres
+                    </p>
+                    
+                    <br>
+
+                    <label>
+                        Masculino: <input type="radio" value="m" v-model="genero">
+                    </label>
+                    <label>
+                        Femenino: <input type="radio" value="f" v-model="genero">
+                    </label>
+                    
+                    <br>
+
+                    <p>¿Cuántos años tienes programando en PHP?
+                        <br>
+                        <button type="button" class="btn d-inline p-2 btn-light" v-bind:disabled="php_años<=0" @click="restar">-</button>
+                        <span class="d-inline p-2">{{ php_años }}</span>
+                        <button type="button" class="btn d-inline p-2 btn-light" v-bind:disabled="php_años>=26" @click="sumar">+</button>
+                    </p>
+
+                    <br>
+
+                    <button class="btn btn-primary" v-bind:disabled="nombre.length < 4" v-on:click.prevent="signUp()">Registrar</button>
+                    <button class="btn btn-primary" v-on:click.prevent="signUp(nombre)">Salir del Sistema</button>
+                    
+                </form>
+                
+                <hr>
+                <pre class="bg-light"> {{ $data }} </pre>
+                
+            </div>                
+        </div>
+    </div>
+
+    <script src="vue.js"></script>
+        <script>
+
+        new Vue({
+            el: "#app",
+            data: {
+                nombre: '',
+                genero: 'm',
+                php_años: 5
+            },
+            methods: {
+                signUp: function(logout) {
+                    console.log( 'Console general')
+                    if(logout) {
+                        console.log('viene con', logout)
+                    } else if(logout==''){
+                        console.log('viene empty')
+                    }
+                },
+                restar: function() {
+                    (this.php_años > 0) ? this.php_años-- : null
+                },
+                sumar: function() {
+                    (this.php_años >= 0) ? this.php_años++ : null
+               }
+            }
+        })
+    </script>
+</body>
+</html>
